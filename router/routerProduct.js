@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  cariData,
   editProductData,
   getAllProduct,
   getIdProduct,
@@ -97,6 +98,12 @@ routerProduct.post(
   jsonAdminVerify,
   validateData(),
   postProduct
+);
+
+routerProduct.post(
+  "/caridata",
+  [body("datanya", `HArus isi`).trim().notEmpty().not().equals(" ")],
+  cariData
 );
 
 export default routerProduct;

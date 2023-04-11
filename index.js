@@ -67,7 +67,7 @@ const port = process.env.PORT;
       .json({ error: { pesan: `${pesan + " " + status}` } });
   });
 
-  mongoose.set("strictQuery", false);
+  // mongoose.set("strictQuery", false);
   const connectDB = async () => {
     try {
       const conn = await mongoose.connect(process.env.MONGO_URI);
@@ -95,7 +95,7 @@ const port = process.env.PORT;
 
   connectDB().then(() => {
     app.listen(port, () => {
-      console.log("listening for requests", `konek`);
+      console.log("listening for requests", `konek`, typeof NaN);
     });
   });
 })();

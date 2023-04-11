@@ -354,3 +354,27 @@ export const editProductData = async (req, res, next) => {
     next(err);
   }
 };
+
+export const cariData = async (req, res, next) => {
+  try {
+    const datanya = await req.body.datanya.trim();
+
+    const error = validationResult(req);
+    if (!error.isEmpty()) throw new HttpError(error.array()[0].msg, 401);
+
+    const dataBarang = await productModel.find({
+      namaPakian: {
+        $regex: new RegExp(datanya, "i"),
+      },
+    });
+    const totalbarang = dataBarang.length;
+    await res.status(201).json({
+      datanya,
+      totalbarang,
+
+      dataBarang,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
