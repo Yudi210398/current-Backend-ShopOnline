@@ -67,7 +67,7 @@ const port = process.env.PORT;
       .json({ error: { pesan: `${pesan + " " + status}` } });
   });
 
-  // mongoose.set("strictQuery", false);
+  mongoose.set("strictQuery", false);
   const connectDB = async () => {
     try {
       const conn = await mongoose.connect(process.env.MONGO_URI);
