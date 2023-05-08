@@ -61,7 +61,7 @@ export const postOrder = async (req, res, next) => {
             } catch (err) {
               next(err);
             }
-          },
+          }
         );
         if (saveOrder) {
           await data.save();
@@ -75,11 +75,11 @@ export const postOrder = async (req, res, next) => {
 
     const uploadImageCloud = await data.uploader.upload(
       gambarCloudUri.content,
-      { folder: "gambar" },
+      { folder: "gambar" }
     );
 
     const populatedata = await dataUser[0].populate(
-      "keranjangOrder.item.produkIds",
+      "keranjangOrder.item.produkIds"
     );
     const dataProductOder = await populatedata.keranjangOrder.item.map(
       (data) => {
@@ -89,7 +89,7 @@ export const postOrder = async (req, res, next) => {
           quantity: data.quantity,
           produk: { ...data.produkIds._doc },
         };
-      },
+      }
     );
     const totalHarga = dataProductOder
       ?.map((data) => data.quantity * data.produk.harga)
@@ -128,7 +128,7 @@ export const detailTransaksi = async (req, res, next) => {
 
     const orderData = await orderShema.find().populate("userId produks.produk");
     const orderid = await orderData.filter(
-      (data) => data._id.toString() === paramsOrderId,
+      (data) => data._id.toString() === paramsOrderId
     );
     if (orderid.length === 0) throw new HttpError("Tidak ada Data", 401);
     await res.status(201).json({
@@ -139,6 +139,16 @@ export const detailTransaksi = async (req, res, next) => {
   }
 };
 
+const imageCloudFungsi = async (req) => {
+  const gambarResicloud = getDataUri(req.file);
+
+  const uploadImageCloud = await data.uploader.upload(gambarResicloud.content, {
+    folder: "gambar",
+  });
+
+  return uploadImageCloud;
+};
+
 export const inputResi = async (req, res, next) => {
   try {
     const pid = req.params.pid;
@@ -147,12 +157,8 @@ export const inputResi = async (req, res, next) => {
     const dataIdOrder = await orderShema.findById(pid);
     if (!req.file || !resiPengiriman)
       throw new HttpError("Belum memasukan data", 401);
-    const gambarResicloud = getDataUri(req.file);
 
-    const uploadImageCloud = await data.uploader.upload(
-      gambarResicloud.content,
-      { folder: "gambar" },
-    );
+    const uploadImageCloud = await imageCloudFungsi(req);
 
     dataIdOrder.resiPengiriman = resiPengiriman;
     dataIdOrder.gambarResi = {
@@ -170,13 +176,41 @@ export const inputResi = async (req, res, next) => {
   }
 };
 
+export const orderDibatalkan = async (req, res, next) => {
+  try {
+    const pid = req.params.pid;
+    const { alasanDibatalkan } = req.body;
+
+    const dataIdOrder = await orderShema.findById(pid);
+
+    if (!req.file || !alasanDibatalkan)
+      throw new HttpError("Belum memasukan data", 401);
+
+    const uploadImageCloud = await imageCloudFungsi(req);
+
+    dataIdOrder.orderBatal.dibatalkan = true;
+    dataIdOrder.orderBatal.alasanDibatalkan = alasanDibatalkan;
+
+    dataIdOrder.orderBatal.gambarTranferRefundBatal = {
+      publick_id: uploadImageCloud.public_id,
+      url: uploadImageCloud.secure_url,
+    };
+
+    await dataIdOrder.save();
+    await res.status(201).json({
+      dataIdOrder,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getProdukOrderId = async (req, res, next) => {
   try {
     const paramsOrderIdProduk = req.params.idorderproduk;
     const orderShemas = await orderShema
       .findById(paramsOrderIdProduk)
       .populate("produks.produk");
-    console.log(`kocak lu wkwk`);
     await res.status(201).json({
       orderShemas,
       detailProduk: orderShemas.produks,

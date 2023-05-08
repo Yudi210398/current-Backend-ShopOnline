@@ -33,6 +33,15 @@ const orderSchema = new Schema({
     publick_id: { type: String, default: null },
     url: { type: String, default: null },
   },
+
+  orderBatal: {
+    dibatalkan: { type: Boolean, default: null },
+    alasanDibatalkan: { type: String, default: null },
+    gambarTranferRefundBatal: {
+      publick_id: { type: String, default: null },
+      url: { type: String, default: null },
+    },
+  },
 });
 
 orderSchema.plugin(mongooseUniqueValidator);
