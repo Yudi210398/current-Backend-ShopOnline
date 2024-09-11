@@ -365,7 +365,10 @@ export const dataKemas = async (req, res, next) => {
 
     let ordersDatas = dataOrderUser;
     let ordersData = await ordersDatas.filter(
-      (datas) => datas.resiPengiriman == null && datas.gambarResi.url === null
+      (datas) =>
+        !datas.resiPengiriman &&
+        !datas.gambarResi.url &&
+        !datas.orderBatal.dibatalkan
     );
     res.status(201).json({
       ordersData,
@@ -412,6 +415,23 @@ export const dataKirimProdukSelesai = async (req, res, next) => {
         datas.resiPengiriman &&
         datas.gambarResi.url &&
         datas.validasiPenerima.suksesTerima === "Telah terima"
+    );
+    res.status(201).json({
+      filterData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const orderGagal = async (req, res, next) => {
+  try {
+    const dataOrderBarang = await fungsigetOrder(req);
+    const filterData = await dataOrderBarang.filter(
+      (datas) =>
+        !datas.resiPengiriman &&
+        !datas.gambarResi.url &&
+        datas.orderBatal.dibatalkan
     );
     res.status(201).json({
       filterData,

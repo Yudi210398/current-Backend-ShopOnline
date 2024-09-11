@@ -19,6 +19,7 @@ import {
   dataKemas,
   dataKirimProduk,
   dataKirimProdukSelesai,
+  orderGagal,
 } from "../controller/contollerUser.js";
 import { fileUpload } from "./routerProduct.js";
 import usersShema from "../model/data/usersShema.js";
@@ -59,6 +60,7 @@ routerUsers.post("/keranjangorder", jsonVerify, postKeranjangOrder);
 routerUsers.delete("/deletecartid", jsonVerify, deleteCartId);
 
 routerUsers.get("/datakemas", jsonVerify, dataKemas);
+routerUsers.get("/ordergagal", jsonVerify, orderGagal);
 
 routerUsers.get("/datakirimproduk", jsonVerify, dataKirimProduk);
 
