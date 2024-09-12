@@ -20,33 +20,33 @@ routerOrders.get("/dataiduser/:idorder", jsonAdminVerify, detailTransaksi);
 routerOrders.get(
   "/detailprodukorder/:idorderproduk",
   jsonVerify,
-  getProdukOrderId
+  getProdukOrderId,
 );
 
 routerOrders.post(
   "/orderresi/:pid",
   fileUpload.single("gambarResi"),
   jsonAdminVerify,
-  inputResi
+  inputResi,
 );
 
 routerOrders.post(
   "/orderdibatalkan/:pid",
   fileUpload.single("gambarTranferRefundBatal"),
-  orderDibatalkan
+  orderDibatalkan,
 );
 
 routerOrders.post(
   "/orders",
   fileUpload.single("buktiTranfer"),
   jsonVerify,
-  postOrder
+  postOrder,
 );
 
 routerOrders.post(
   "/postdatasuksesorder/:paramsidPesanan",
   jsonVerify,
-  pesananDiterima
+  pesananDiterima,
 );
 
 export default routerOrders;
