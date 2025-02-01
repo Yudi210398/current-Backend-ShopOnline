@@ -61,6 +61,7 @@ export const getIdProduct = async (req, res, next) => {
 
 export const postProduct = async (req, res, next) => {
   try {
+    console.log(`data`);
     const dataPlace = await productModel.find();
     const { namaPakian, jenisPakaian, stock, deskripsi, harga } = req.body;
     const error = validationResult(req);
